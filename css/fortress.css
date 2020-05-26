@@ -11,3 +11,18 @@
 #playground {
     border: 1px black solid;
 }
+
+#status {
+    padding-left: 50px;
+}
+
+#power {
+    border: 1px black solid;
+    background-color: aliceblue;
+    margin-top: 32px;
+    margin-left: 25px;
+}
+
+#angle {    
+    margin-left: 10px;
+}
