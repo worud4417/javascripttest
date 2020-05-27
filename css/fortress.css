@@ -10,6 +10,7 @@
 
 #playground {
     border: 1px black solid;
+    display: flex;
 }
 
 #status {
@@ -25,4 +26,8 @@
 
 #angle {    
     margin-left: 10px;
+}
+
+#charge {
+    background-color: blue;
 }

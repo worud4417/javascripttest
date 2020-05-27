@@ -5,71 +5,116 @@ const PLAYGROUNDY = "450px"
 const TANKHEIGHT = "50px"
 const TANKWIDTH = "50px"
 
-const GUNBARRELHEIGHT = "3px"
-const GUNBARRELWIDTH = "70px"
+const GUNBARRELHEIGHT = "3px";
+const GUNBARRELWIDTH = "70px";
 
-const POWERHEIGHT = "10px"
-const POWERWIDTH = "100px"
+const POWERHEIGHT = "10px";
+const POWERWIDTH = "200px";
+
+const CHARGEHEIGHT = "10px";
 
 window.onload = function(){
-    var div1 = this.document.getElementById("myDiv")
-    var playground = this.document.getElementById("playground")
-    var gunBareel = this.document.getElementById("gunBarrel")
-    var angle = this.document.getElementById("angle")
-    var power = this.document.getElementById("power")
+    let div1 = this.document.getElementById("myDiv");
+    let playground = this.document.getElementById("playground");
+    let gunBareel = this.document.getElementById("gunBarrel");
+    let angle = this.document.getElementById("angle");
+    let power = this.document.getElementById("power");
+    let charge = this.document.getElementById("charge");
 
-    playground.style.width = PLAYGROUNDX
-    playground.style.height = PLAYGROUNDY
+    let angleValue = 0;
+    let chargeValue = 0;
 
-    div1.style.height = TANKHEIGHT
-    div1.style.width = TANKWIDTH
+    playground.style.width = PLAYGROUNDX;
+    playground.style.height = PLAYGROUNDY;
 
-    gunBareel.style.height = GUNBARRELHEIGHT
-    gunBareel.style.paddingLeft = GUNBARRELWIDTH
+    div1.style.height = TANKHEIGHT;
+    div1.style.width = TANKWIDTH;
 
-    power.style.height = POWERHEIGHT
-    power.style.width = POWERWIDTH
+    gunBareel.style.height = GUNBARRELHEIGHT;
+    gunBareel.style.paddingLeft = GUNBARRELWIDTH;
 
-    div1.style.marginTop = (PLAYGROUNDY.slice(0,PLAYGROUNDY.length-2)*1)-(div1.style.height.slice(0,div1.style.height.length-2)*1)+"px"
+    power.style.height = POWERHEIGHT;
+    power.style.width = POWERWIDTH;
+
+    charge.style.height = CHARGEHEIGHT;
+    charge.style.width = "0px";
+
+    div1.style.marginTop = this.pxStringToNumber(PLAYGROUNDY)-this.pxStringToNumber(div1.style.height)+"px";
 
     this.document.addEventListener("keydown",function(e){
         const keyCode = e.keyCode;
 
         if(keyCode == 39){
-            div1.style.marginLeft = moveTargetByMargin(div1.style.marginLeft,MOVELENGTH)
+            div1.style.marginLeft = moveTargetByMargin(div1.style.marginLeft,MOVELENGTH);
         }else if(keyCode == 37){
-            div1.style.marginLeft = moveTargetByMargin(div1.style.marginLeft,-MOVELENGTH)
+            div1.style.marginLeft = moveTargetByMargin(div1.style.marginLeft,-MOVELENGTH);
         }else if(keyCode == 38){
-            let angleValue = angle.textContent*1+1
-            if (angleValue>90){
-                angleValue = 90
+            let angleNumber = angle.textContent*1+1;
+            if (angleNumber>90){
+                angleNumber = 90;
             }
-            angle.textContent = angleValue+""
+            angleValue = angleNumber;
+            angle.textContent = angleNumber+"";
         }else if(keyCode == 40){
-            let angleValue = angle.textContent*1-1
-            if (angleValue<0){
-                angleValue = 0
+            let angleNumber = angle.textContent*1-1;
+            if (angleNumber<0){
+                angleNumber = 0;
             }
-            angle.textContent = angleValue+""
+            angleValue = angleNumber;
+            angle.textContent = angleNumber+"";
         }else if(keyCode == 32){
+            chargeValue++;
+            if(chargeValue>100){
+                chargeValue=100;
+            }
+            charge.style.width = chargeValue*2+"px";
+        }
+    })
 
+    this.document.addEventListener("keyup",async function(e){
+        const keyCode = e.keyCode;
+
+        if(keyCode == 32){
+            let bullet = document.createElement("div")
+            bullet.style.height="10px";
+            bullet.style.width="10px";
+            bullet.style.backgroundColor="black";
+            bullet.style.borderRadius="5px";
+            bullet.style.position="absolute";
+
+            bullet.style.marginTop = div1.style.marginTop;
+            bullet.style.marginLeft = pxStringToNumber(div1.style.marginLeft)+pxStringToNumber(gunBareel.style.paddingLeft)+"px";
+            playground.appendChild(bullet)
+
+            for(let i=0;i<100;i++){
+                bullet.style.marginLeft = pxStringToNumber(bullet.style.marginLeft)+2+"px"
+                await sleep(5)
+            }
         }
     })
 }
 
 
 function moveTargetByMargin(_originValue, _moveLength){
-    let number = _originValue.slice(0,_originValue.length-2)*1
-    let movepoint = number+_moveLength
+    let number = pxStringToNumber(_originValue);
+    let movepoint = number+_moveLength;
 
-    let maxPoint = (PLAYGROUNDX.slice(0,PLAYGROUNDX.length-2)*1)-(TANKWIDTH.slice(0,TANKWIDTH.length-2)*1)
+    let maxPoint = pxStringToNumber(PLAYGROUNDX)-pxStringToNumber(TANKWIDTH);
 
     if(movepoint<0){
-        movepoint = 0
+        movepoint = 0;
     } else if(movepoint>maxPoint){
-        movepoint = maxPoint
+        movepoint = maxPoint;
     }
 
-    var stringMovePoint = movepoint+"px"
-    return stringMovePoint
+    var stringMovePoint = movepoint+"px";
+    return stringMovePoint;
+}
+
+function pxStringToNumber(_pxValue){
+    return _pxValue.slice(0,_pxValue.length-2)*1;
+}
+
+function sleep(ms){
+    return new Promise(resolve => setTimeout(resolve,ms));
 }
