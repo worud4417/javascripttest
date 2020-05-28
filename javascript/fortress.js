@@ -1,16 +1,12 @@
-const MOVELENGTH = 3.5
-const PLAYGROUNDX = "1000px"
-const PLAYGROUNDY = "450px"
-
-const TANKHEIGHT = "50px"
-const TANKWIDTH = "50px"
-
+const MOVELENGTH = 3.5;
+const PLAYGROUNDX = "1000px";
+const PLAYGROUNDY = "450px";
+const TANKHEIGHT = "50px";
+const TANKWIDTH = "50px";
 const GUNBARRELHEIGHT = "3px";
 const GUNBARRELWIDTH = "70px";
-
 const POWERHEIGHT = "10px";
 const POWERWIDTH = "200px";
-
 const CHARGEHEIGHT = "10px";
 
 window.onload = function(){
@@ -20,22 +16,17 @@ window.onload = function(){
     let angle = this.document.getElementById("angle");
     let power = this.document.getElementById("power");
     let charge = this.document.getElementById("charge");
-
     let angleValue = 0;
     let chargeValue = 0;
 
     playground.style.width = PLAYGROUNDX;
     playground.style.height = PLAYGROUNDY;
-
     div1.style.height = TANKHEIGHT;
     div1.style.width = TANKWIDTH;
-
     gunBareel.style.height = GUNBARRELHEIGHT;
     gunBareel.style.paddingLeft = GUNBARRELWIDTH;
-
     power.style.height = POWERHEIGHT;
     power.style.width = POWERWIDTH;
-
     charge.style.height = CHARGEHEIGHT;
     charge.style.width = "0px";
 
@@ -84,12 +75,27 @@ window.onload = function(){
 
             bullet.style.marginTop = div1.style.marginTop;
             bullet.style.marginLeft = pxStringToNumber(div1.style.marginLeft)+pxStringToNumber(gunBareel.style.paddingLeft)+"px";
-            playground.appendChild(bullet)
+            playground.appendChild(bullet);
 
-            for(let i=0;i<100;i++){
-                bullet.style.marginLeft = pxStringToNumber(bullet.style.marginLeft)+2+"px"
-                await sleep(5)
+            let v = chargeValue;
+            chargeValue=0;
+
+            for(let i=0;;i++){
+                let ii = i/20;
+                let x = v*Math.cos(angleValue*Math.PI/180)*ii;
+                let y = (v*Math.sin(angleValue*Math.PI/180)*ii)-(5*Math.pow(ii,2));
+
+                bullet.style.marginLeft = pxStringToNumber(div1.style.marginLeft)+pxStringToNumber(gunBareel.style.paddingLeft)+x+"px";
+                bullet.style.marginTop = pxStringToNumber(div1.style.marginTop)-y+"px";
+
+                if(pxStringToNumber(bullet.style.marginTop)>pxStringToNumber(playground.style.height)){
+                    break;
+                } else if(pxStringToNumber(bullet.style.marginLeft)>pxStringToNumber(playground.style.width)){
+                    break;
+                }
+                await sleep(3);
             }
+            bullet.remove();
         }
     })
 }
